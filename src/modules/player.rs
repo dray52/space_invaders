@@ -51,11 +51,8 @@ pub fn moveing(&mut self)   {
     if is_key_down(KeyCode::A) {
         move_dir.x -= 1.0;
     }
-    if is_key_down(KeyCode::S) {
-        move_dir.y += 1.0;
-    }
-    if is_key_down(KeyCode::W) {
-        move_dir.y -= 1.0;
+    if is_key_down(KeyCode::Space){
+        
     }
  self.movement = move_dir * self.move_speed * get_frame_time();
     // Normalize the movement to prevent faster diagonal movement
@@ -128,17 +125,7 @@ pub fn draw(&self) {
     }
 
     
-    pub fn move_check_collision_y(&mut self, img_other: &StillImage) -> bool {
-        let mut answer = false;
-          if  self.movement.y != 0.0{
-            self.set_y(self.get_y()+self.movement.y);
-        if check_collision(self.view_player(), img_other, 1)  {
-           answer = true;
-        }
-          }
-
-        answer
-    }
+   
       pub fn move_check_collision_x(&mut self, img_other: &StillImage) -> bool {
         let mut answer = false;
           if  self.movement.x != 0.0{

@@ -13,3 +13,7 @@ use crate::modules::grid::draw_grid;
 --------------------------------------------
 */
 // Add modules below
+pub mod collision;
+pub mod player;
+pub mod still_image;
+pub mod text_button;
