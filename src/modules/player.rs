@@ -5,10 +5,12 @@
 use macroquad::prelude::*;
 use crate::modules::still_image::StillImage;
 use crate::modules::collision::check_collision;
+use crate::modules::bullet::{self, Bullet};
 pub struct Player {
     view: StillImage,
     move_speed: f32,
     movement: Vec2,
+    
     
 
 
@@ -32,13 +34,14 @@ impl Player{
             movement: Vec2::ZERO,
             
             
+            
         }
         }
 
 
 
 #[allow(unused)]
-pub fn moveing(&mut self)   {
+pub fn moveing(&mut self){
 
 
      // Direction to move in
@@ -51,9 +54,7 @@ pub fn moveing(&mut self)   {
     if is_key_down(KeyCode::A) {
         move_dir.x -= 1.0;
     }
-    if is_key_down(KeyCode::Space){
-        
-    }
+   
  self.movement = move_dir * self.move_speed * get_frame_time();
     // Normalize the movement to prevent faster diagonal movement
     if move_dir.length() > 0.0 {
@@ -64,8 +65,29 @@ pub fn moveing(&mut self)   {
         
     // Apply movement based on frame time
 
-
 }
+pub async fn spawn_bullet(&mut self, mut bullets: Vec<Bullet>) -> Vec<Bullet> {
+     if is_key_down(KeyCode::Space){
+        let bullet = Bullet::new(
+            "assets/bullet.png",
+            50.0, // width
+            50.0, // height
+            self.view.get_x(),
+            self.view.get_y(),
+            true, // Enable stretching
+            1.0,  // Normal zoom (100%)
+        );
+        
+    
+   
+    bullets.push(bullet.await);
+     
+    bullets
+     }
+     else{
+         Vec::new()
+     }
+     }
 
 pub fn draw(&self) {
         // Only draw if the label is visible
@@ -82,11 +104,7 @@ pub fn draw(&self) {
    
     
 
-    // Getter for position as Vec2
-    #[allow(unused)]
-    pub fn get_position(&self) -> Vec2 {
-        Vec2::new(self.view.get_x(), self.view.get_y())
-    }
+  
     
     // Getter for visibility
     #[allow(unused)]
@@ -120,6 +138,7 @@ pub fn draw(&self) {
     pub fn set_y(&mut self, y: f32) {
         self.view.set_y(y);
     }
+    #[allow(unused)]
      pub fn pos(&self) -> Vec2 {
         vec2(self.view.get_x(), self.view.get_y())
     }
