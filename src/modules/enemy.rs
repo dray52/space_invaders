@@ -1,12 +1,13 @@
-//pub mod player;
+//pub mod enemy;
 
-//use crate::modules::player::Player;
+//use crate::modules::enemy::Enemy;
 
 use macroquad::prelude::*;
 use crate::modules::still_image::StillImage;
 use crate::modules::collision::check_collision;
 use crate::modules::bullet::{self, Bullet};
-pub struct Player {
+use crate::start;
+pub struct Enemy {
     view: StillImage,
     move_speed: f32,
     movement: Vec2,
@@ -18,7 +19,7 @@ pub struct Player {
 
 
 
-impl Player{
+impl Enemy{
  pub async fn new(
         asset_path: &str, 
         width: f32, 
@@ -26,9 +27,9 @@ impl Player{
         x: f32, 
         y: f32,
         stretch_enabled: bool,
-        zoom_level: f32) -> Player{
+        zoom_level: f32) -> Enemy{
 
-        Player {
+        Enemy {
             view: StillImage::new(asset_path, width, height, x, y, stretch_enabled, zoom_level).await,
             move_speed: 400.0, // Default speed
             movement: Vec2::ZERO,
@@ -37,59 +38,8 @@ impl Player{
             
         }
         }
-
-
-
-#[allow(unused)]
-pub fn moveing(&mut self){
-
-
-     // Direction to move in
-    let mut move_dir = vec2(0.0, 0.0);
-
-    // Keyboard input
-    if is_key_down(KeyCode::D) {
-        move_dir.x += 1.0;
-    }
-    if is_key_down(KeyCode::A) {
-        move_dir.x -= 1.0;
-    }
-   
- self.movement = move_dir * self.move_speed * get_frame_time();
-    // Normalize the movement to prevent faster diagonal movement
-    if move_dir.length() > 0.0 {
-        move_dir = move_dir.normalize();
-    }
- 
-      
-        self.set_x(self.get_x()+self.movement.x);
-    // Apply movement based on frame time
-
-}
-pub async fn spawn_bullet(&mut self, mut bullets: Vec<Bullet>) -> Vec<Bullet> {
-     if is_key_down(KeyCode::Space){
-        let bullet = Bullet::new(
-            "assets/bullet.png",
-            50.0, // width
-            50.0, // height
-            self.view.get_x(),
-            self.view.get_y(),
-            true, // Enable stretching
-            1.0,  // Normal zoom (100%)
-        );
-        
     
-   
-    bullets.push(bullet.await);
-     
-    bullets
-     }
-     else{
-         Vec::new()
-     }
-     }
-
-pub fn draw(&self) {
+    pub fn draw(&self) {
         // Only draw if the label is visible
        self.view.draw();
         }
@@ -104,7 +54,15 @@ pub fn draw(&self) {
    
     
 
-  
+  pub fn enemy_move(&mut self, move_speed: f32, start_x: f32, start_pos: Vec2) {
+        self.set_x(self.get_x()+move_speed * get_frame_time());
+        if self.get_x() > start_pos.x+350.0 || self.get_x() < start_pos.x-50.0 {
+            println!("Enemy changed direction");
+            self.move_speed *= -1.0; // Reverse direction
+            self.set_y(self.get_y() + 40.0);
+        }
+
+    }
     
     // Getter for visibility
     #[allow(unused)]
@@ -142,8 +100,10 @@ pub fn draw(&self) {
      pub fn pos(&self) -> Vec2 {
         vec2(self.view.get_x(), self.view.get_y())
     }
-
     
-   
-   
-}
+    
+    
+    
+    
+    
+    }
