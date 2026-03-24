@@ -19,3 +19,4 @@ pub mod still_image;
 pub mod text_button;
 pub mod bullet;
 pub mod enemy;
+pub mod label;

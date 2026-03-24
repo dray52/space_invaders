@@ -4,9 +4,9 @@
 
 use macroquad::prelude::*;
 use crate::modules::still_image::StillImage;
-use crate::modules::collision::check_collision;
+use crate::modules::collision::{self, check_collision};
 use crate::modules::bullet::{self, Bullet};
-use crate::start;
+
 pub struct Enemy {
     view: StillImage,
     move_speed: f32,
@@ -54,15 +54,17 @@ impl Enemy{
    
     
 
-  pub fn enemy_move(&mut self, move_speed: f32, start_x: f32, start_pos: Vec2) {
-        self.set_x(self.get_x()+move_speed * get_frame_time());
-        if self.get_x() > start_pos.x+350.0 || self.get_x() < start_pos.x-50.0 {
-            println!("Enemy changed direction");
-            self.move_speed *= -1.0; // Reverse direction
-            self.set_y(self.get_y() + 40.0);
+  pub fn enemy_move(&mut self, wall1: &StillImage, wall2: &StillImage) {
+        self.set_x(self.get_x()+self.move_speed * get_frame_time());
+       if check_collision(self.view_player(), wall1, 1)|| check_collision(self.view_player(), wall2, 1) {
+self.set_x(self.get_x()-self.move_speed * get_frame_time());
+     self.move_speed= self.move_speed * -1.0;
+     self.set_y(self.get_y()+10.0);
+       }
+
         }
 
-    }
+    
     
     // Getter for visibility
     #[allow(unused)]
