@@ -20,3 +20,5 @@ pub mod text_button;
 pub mod bullet;
 pub mod enemy;
 pub mod label;
+pub mod scale;
+pub mod preload_image;

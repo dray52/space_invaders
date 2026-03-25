@@ -9,7 +9,8 @@ mod start;
 mod game;
 
 use macroquad::prelude::*;
-
+use crate::modules::preload_image::TextureManager;
+    use crate::modules::preload_image::LoadingScreenOptions;
 fn window_conf() -> Conf {
     Conf {
         window_title: "Space Invaders".to_owned(),
@@ -27,12 +28,32 @@ fn window_conf() -> Conf {
 async fn main() {
     let mut current_screen = "screen1".to_string();
     let mut last_switch = get_time() - 0.02;
-
+    let all_assets = vec![
+        "assets/background.png",
+        "assets/title.png",
+        "assets/ship.png",
+        "assets/wall.png",
+        "assets/heart.png",
+        "assets/enemy.png",
+        "assets/bullet.png",
+        "assets/bullet1.png",
+    ];
+let tm = TextureManager::new(); 
+let loading_options = LoadingScreenOptions {
+       title: Some("MY GAME".to_string()),
+       background_color: DARKBLUE,
+       bar_fill_color: GOLD,
+       // Use default values for other options
+       ..Default::default()
+            };
+            tm.preload_with_loading_screen(&all_assets, Some(loading_options)).await;
     loop {
+       
+        
         if get_time() - last_switch > 0.01 {
             current_screen = match current_screen.as_str() {
-                "screen1" => start::run().await,
-                "screen2" => game::run().await,
+                "screen1" => start::run(&tm).await,
+                "screen2" => game::run(&tm).await,
                 _ => break,
             };
             last_switch = get_time();

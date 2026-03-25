@@ -8,11 +8,16 @@ use crate::modules::label::Label;
 use macroquad::prelude::*;
 use macroquad::rand::ChooseRandom;
 use miniquad::date;
+use crate::modules::scale::use_virtual_resolution;
+use crate::modules::preload_image::TextureManager;
+    use crate::modules::preload_image::LoadingScreenOptions;
 
-pub async fn run() -> String {
-    let background = StillImage::new("assets/background.png", 800.0, 1200.0, 0.0, 0.0, true, 1.0).await;
+pub async fn run(tm: &TextureManager) -> String {
+    let mut background = StillImage::new("", 800.0, 1200.0, 0.0, 0.0, true, 1.0).await;
+    background.set_preload(tm.get_preload("assets/background.png").unwrap());
 
-    let mut ship = Player::new("assets/ship.png", 50.0, 50.0, 200.0, 1100.0, true, 1.0).await;
+    let mut ship = Player::new("", 50.0, 50.0, 200.0, 1100.0).await;
+    ship.set_preload(tm.get_preload("assets/ship.png").unwrap());
 
     let wall1 = StillImage::new("assets/wall.png", 500.0, 2000.0, -230.0, -300.0, true, 1.0).await;
     let wall2 = StillImage::new("assets/wall.png", 500.0, 2000.0, 530.0, -300.0, true, 1.0).await;
@@ -54,6 +59,7 @@ let mut lives = 3;
 
     rand::srand(date::now() as u64);
     loop {
+         use_virtual_resolution(800.0, 1200.0);
         clear_background(WHITE);
         background.draw();
         for enemy in 0..enemies.len() {

@@ -2,7 +2,10 @@ use macroquad::prelude::*;
 
 use crate::modules::still_image::StillImage;
 use crate::modules::text_button::TextButton;
-pub async fn run() -> String {
+use crate::modules::scale::use_virtual_resolution;
+use crate::modules::preload_image::TextureManager;
+    use crate::modules::preload_image::LoadingScreenOptions;
+pub async fn run(tm: &TextureManager) -> String {
     let background = StillImage::new(
         "assets/background.png",
         800.0,  // width
@@ -26,6 +29,7 @@ pub async fn run() -> String {
     let btn_start = TextButton::new(200.0, 600.0, 400.0, 130.0, "START", RED, YELLOW, 90);
     let btn_exit = TextButton::new(200.0, 750.0, 400.0, 130.0, "EXIT", RED, YELLOW, 90);
     loop {
+         use_virtual_resolution(800.0, 1200.0);
         clear_background(WHITE);
 background.draw();
        
