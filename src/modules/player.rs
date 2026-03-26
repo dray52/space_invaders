@@ -5,6 +5,7 @@
 use crate::modules::bullet::{self, Bullet};
 use crate::modules::collision::check_collision;
 use crate::modules::still_image::StillImage;
+use crate::modules::preload_image::TextureManager;
 use macroquad::prelude::*;
 pub struct Player {
    view: StillImage,
@@ -59,10 +60,12 @@ impl Player {
             self.set_x(self.get_x() - self.movement.x);
         }
     }
-    pub async fn spawn_bullet(&mut self, mut bullets: Vec<Bullet>) -> Vec<Bullet> {
+
+    
+    pub async fn spawn_bullet(&mut self, mut bullets: Vec<Bullet>, tm: &TextureManager) -> Vec<Bullet> {
         if is_key_down(KeyCode::Space) {
             let bullet = Bullet::new(
-                "assets/bullet.png",
+                tm.get_preload("assets/bullet.png").unwrap(),
                 50.0, // width
                 50.0, // height
                 self.view.get_x(),

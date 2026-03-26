@@ -10,21 +10,28 @@ use macroquad::rand::ChooseRandom;
 use miniquad::date;
 use crate::modules::scale::use_virtual_resolution;
 use crate::modules::preload_image::TextureManager;
-    use crate::modules::preload_image::LoadingScreenOptions;
+    
 
 pub async fn run(tm: &TextureManager) -> String {
     let mut background = StillImage::new("", 800.0, 1200.0, 0.0, 0.0, true, 1.0).await;
     background.set_preload(tm.get_preload("assets/background.png").unwrap());
 
-    let mut ship = Player::new("", 50.0, 50.0, 200.0, 1100.0).await;
-    ship.set_preload(tm.get_preload("assets/ship.png").unwrap());
+    let mut ship = Player::new(tm.get_preload("assets/ship.png").unwrap(), 50.0, 50.0, 200.0, 1100.0).await;
+    
 
-    let wall1 = StillImage::new("assets/wall.png", 500.0, 2000.0, -230.0, -300.0, true, 1.0).await;
-    let wall2 = StillImage::new("assets/wall.png", 500.0, 2000.0, 530.0, -300.0, true, 1.0).await;
+    let mut wall1 = StillImage::new("", 500.0, 2000.0, -230.0, -300.0, true, 1.0).await;
+    let mut wall2 = StillImage::new("", 500.0, 2000.0, 530.0, -300.0, true, 1.0).await;
+    wall1.set_preload(tm.get_preload("assets/wall.png").unwrap());
+    wall2.set_preload(tm.get_preload("assets/wall.png").unwrap());
+
     let btn_exit = TextButton::new(760.0, 10.0, 50.0, 32.5, "X", RED, YELLOW, 20);
-let heart1 = StillImage::new("assets/heart.png", 50.0, 50.0, 10.0, 10.0, true, 1.0).await;
-let heart2 = StillImage::new("assets/heart.png", 50.0, 50.0, 70.0, 10.0, true, 1.0).await;
-let heart3 = StillImage::new("assets/heart.png", 50.0, 50.0, 130.0, 10.0, true, 1.0).await;
+let mut heart1 = StillImage::new("", 50.0, 50.0, 10.0, 10.0, true, 1.0).await;
+let mut heart2 = StillImage::new("", 50.0, 50.0, 70.0, 10.0, true, 1.0).await;
+let mut heart3 = StillImage::new("", 50.0, 50.0, 130.0, 10.0, true, 1.0).await;
+
+heart1.set_preload(tm.get_preload("assets/heart.png").unwrap());
+heart2.set_preload(tm.get_preload("assets/heart.png").unwrap());
+heart3.set_preload(tm.get_preload("assets/heart.png").unwrap());
 let mut lbl_score = Label::new("0", 350.0, 20.0, 30);
 lbl_score.with_colors(WHITE, None);
 
@@ -39,13 +46,13 @@ let mut lives = 3;
     let mut enemies: Vec<Enemy> = vec![];
     for i in 0..25 {
         let enemy = Enemy::new(
-            "assets/enemy.png",
-            40.0,    // width
-            40.0,    // height
-            enemy_x, // x position
-            enemy_y, // y position
-            true,    // Enable stretching
-            1.0,     // Normal zoom (100%)
+            tm.get_preload("assets/enemy.png").unwrap(),
+            40.0,    
+            40.0,    
+            enemy_x,
+            enemy_y, 
+            true,    
+            1.0,    
         )
         .await;
         enemy_x += 90.0; // Move the next enemy to the right
@@ -65,12 +72,12 @@ let mut lives = 3;
         for enemy in 0..enemies.len() {
             enemies[enemy].enemy_move(&wall1, &wall2);
         }
-        if get_time() - bullet_cooldown > 1.0 {
+        if get_time() - bullet_cooldown > 0.7 {
             let spawn = enemies.choose().unwrap();
             let bullet_x = spawn.get_x();
             let bullet_y = spawn.get_y();
             let bullet = Bullet::new(
-                "assets/bullet1.png",
+                tm.get_preload("assets/bullet1.png").unwrap(),
                 50.0, // width
                 50.0, // height
                 bullet_x,
@@ -83,7 +90,7 @@ let mut lives = 3;
         }
 
         if is_key_down(KeyCode::Space) && get_time() - cooldown > 0.5 {
-            p_bullets = ship.spawn_bullet(p_bullets).await;
+            p_bullets = ship.spawn_bullet(p_bullets, tm).await;
             cooldown = get_time();
         }
         

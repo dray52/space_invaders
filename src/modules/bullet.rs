@@ -17,17 +17,11 @@ pub struct Bullet {
 
 
 impl Bullet{
- pub async fn new(
-        asset_path: &str, 
-        width: f32, 
-        height: f32, 
-        x: f32, 
-        y: f32,
-        stretch_enabled: bool,
-        zoom_level: f32) -> Bullet{
-
+ pub async fn new(image_path: (Texture2D, Option<Vec<u8>>, String), width: f32, height: f32, x: f32, y: f32,stretch_enabled: bool,zoom_level: f32) -> Bullet{
+ let mut view = StillImage::new("", width, height, x, y, stretch_enabled, zoom_level).await;
+view.set_preload(image_path);
         Bullet {
-            view: StillImage::new(asset_path, width, height, x, y, stretch_enabled, zoom_level).await,
+            view,
             move_speed: 400.0, // Default speed
             movement: Vec2::ZERO,
             
