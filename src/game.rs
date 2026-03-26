@@ -72,7 +72,7 @@ let mut lives = 3;
         for enemy in 0..enemies.len() {
             enemies[enemy].enemy_move(&wall1, &wall2);
         }
-        if get_time() - bullet_cooldown > 0.3 {
+        if get_time() - bullet_cooldown > 0.1 {
             let spawn = enemies.choose().unwrap();
             let bullet_x = spawn.get_x();
             let bullet_y = spawn.get_y();
