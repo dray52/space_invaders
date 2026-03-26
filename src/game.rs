@@ -67,12 +67,12 @@ let mut lives = 3;
     rand::srand(date::now() as u64);
     loop {
          use_virtual_resolution(800.0, 1200.0);
-        clear_background(WHITE);
+        clear_background(BLACK);
         background.draw();
         for enemy in 0..enemies.len() {
             enemies[enemy].enemy_move(&wall1, &wall2);
         }
-        if get_time() - bullet_cooldown > 0.7 {
+        if get_time() - bullet_cooldown > 0.3 {
             let spawn = enemies.choose().unwrap();
             let bullet_x = spawn.get_x();
             let bullet_y = spawn.get_y();
