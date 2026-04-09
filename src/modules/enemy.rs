@@ -54,7 +54,7 @@ impl Enemy{
        if check_collision(self.view_player(), wall1, 1)|| check_collision(self.view_player(), wall2, 1) {
 self.set_x(self.get_x()-self.move_speed * get_frame_time());
      self.move_speed= self.move_speed * -1.0;
-     self.set_y(self.get_y()+10.0);
+     self.set_y(self.get_y()+30.0);
        }
 
         }
